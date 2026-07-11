@@ -1,7 +1,7 @@
 import time
 import streamlit as st
 import retriever
-from config import BRANDS, GOOGLE_API_KEY
+from config import BRANDS
 from evaluation import evaluate
 from logger import log_event
 from rag_chain import generate_answer

@@ -5,18 +5,20 @@
 pip install -r requirements.txt
 ```
 
-DriveWise uses local Hugging Face embeddings for retrieval and Google Gemini for
-grounded answer generation.
+DriveWise uses local Hugging Face embeddings for retrieval and Groq (free, fast
+Llama inference) for grounded answer generation.
 
-Add your Gemini API key locally in a `.env` file:
+Get a free Groq API key at https://console.groq.com/keys (no credit card needed).
+
+Add it locally in a `.env` file:
 ```
-GOOGLE_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
 ```
 or in Streamlit Cloud secrets:
 ```toml
-GOOGLE_API_KEY = "your_key_here"
+GROQ_API_KEY = "your_key_here"
 HF_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-GEMINI_MODEL = "gemini-2.5-flash"
+GROQ_MODEL = "llama-3.3-70b-versatile"
 ```
 
 ## Add brochures
@@ -49,10 +51,10 @@ streamlit run app.py
 ```
 
 ## Architecture
-- `config.py` - brands/models, section keywords (incl. EV terms like battery/charging for Ioniq 5 & Creta EV), PDF text cleanup, Gemini/embedding setup
+- `config.py` - brands/models, section keywords (incl. EV terms like battery/charging for Ioniq 5 & Creta EV), PDF text cleanup, Groq/embedding setup
 - `ingest.py` - cleans PDF text, splits into section-classified chunks, builds a FAISS index per model
 - `retriever.py` - loads the selected brand/model index, filters/re-ranks matching chunks
-- `rag_chain.py` - builds the controlled context window and calls Gemini for grounded answer generation, with source details
+- `rag_chain.py` - builds the controlled context window and calls Groq for grounded answer generation, with source details
 - `evaluation.py` - faithfulness, context relevance, answer correctness
 - `logger.py` - JSONL logs: query, response time, retrieval, status/errors
 - `app.py` - Streamlit UI

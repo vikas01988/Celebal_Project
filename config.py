@@ -2,7 +2,7 @@ import os
 import re
 from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BROCHURE_DIR = os.path.join(BASE_DIR, "data", "brochures")
@@ -43,7 +43,7 @@ def clean_text(text):
     text = re.sub(r"(?<=[0-9A-Za-z\)])[\^\*#~]{1,4}(?=[\s.,;:]|$)", "", text)
     return " ".join(text.split())
 HF_EMBEDDING_MODEL = os.getenv("HF_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 def _get_secret(name):
     value = os.getenv(name)
@@ -55,23 +55,21 @@ def _get_secret(name):
     except Exception:
         return None
 
-GOOGLE_API_KEY = _get_secret("GOOGLE_API_KEY")
+GROQ_API_KEY = _get_secret("GROQ_API_KEY")
 
 def get_embeddings():
     return HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
 
-
 def get_llm():
-    api_key = GOOGLE_API_KEY or _get_secret("GOOGLE_API_KEY")
+    api_key = GROQ_API_KEY or _get_secret("GROQ_API_KEY")
     if not api_key:
         raise RuntimeError(
-            "GOOGLE_API_KEY is not set. Add it to a .env file (GOOGLE_API_KEY=...) "
-            "or to Streamlit Cloud secrets."
+            "GROQ_API_KEY is not set. Add it to a .env file (GROQ_API_KEY=...) "
+            "or to Streamlit Cloud secrets. Get a free key at https://console.groq.com/keys"
         )
-    model = _get_secret("GEMINI_MODEL") or GEMINI_MODEL or "gemini-3.5-flash"
-    return ChatGoogleGenerativeAI(
+    model = _get_secret("GROQ_MODEL") or GROQ_MODEL or "llama-3.3-70b-versatile"
+    return ChatGroq(
         model=model,
-        google_api_key=api_key,
+        groq_api_key=api_key,
         temperature=0.2,
-        vertexai=False,   # force Developer API backend, skip auto-detection
     )
