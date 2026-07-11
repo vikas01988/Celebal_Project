@@ -55,3 +55,5 @@ if q:
 import streamlit as st
 
 st.write("API Key Loaded:", GOOGLE_API_KEY is not None)
+print("Key starts with:", GOOGLE_API_KEY[:10])
+print("Key length:", len(GOOGLE_API_KEY))
