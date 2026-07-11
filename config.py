@@ -44,6 +44,9 @@ def clean_text(text):
     return " ".join(text.split())
 HF_EMBEDDING_MODEL = os.getenv("HF_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+if GEMINI_MODEL == "gemini-2.0-flash":
+    GEMINI_MODEL = "gemini-3.5-flash"
 
 def _get_secret(name):
     value = os.getenv(name)
@@ -68,3 +71,7 @@ def get_llm():
             "or to Streamlit Cloud secrets."
         )
     return ChatGoogleGenerativeAI(model=GEMINI_MODEL, google_api_key=api_key, temperature=0.2)
+    model = _get_secret("GEMINI_MODEL") or GEMINI_MODEL or "gemini-3.5-flash"
+    if "gemini-2.0-flash" in model.lower():
+        model = "gemini-3.5-flash"
+    return ChatGoogleGenerativeAI(model=model, google_api_key=api_key, temperature=0.2)
