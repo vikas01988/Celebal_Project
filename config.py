@@ -60,6 +60,7 @@ GOOGLE_API_KEY = _get_secret("GOOGLE_API_KEY")
 def get_embeddings():
     return HuggingFaceEmbeddings(model_name=HF_EMBEDDING_MODEL)
 
+
 def get_llm():
     api_key = GOOGLE_API_KEY or _get_secret("GOOGLE_API_KEY")
     if not api_key:
@@ -68,4 +69,9 @@ def get_llm():
             "or to Streamlit Cloud secrets."
         )
     model = _get_secret("GEMINI_MODEL") or GEMINI_MODEL or "gemini-3.5-flash"
-    return ChatGoogleGenerativeAI(model=model, google_api_key=api_key, temperature=0.2)
+    return ChatGoogleGenerativeAI(
+        model=model,
+        google_api_key=api_key,
+        temperature=0.2,
+        vertexai=False,   # force Developer API backend, skip auto-detection
+    )
