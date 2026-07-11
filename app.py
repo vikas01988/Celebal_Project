@@ -1,7 +1,7 @@
 import time
 import streamlit as st
 import retriever
-from config import BRANDS
+from config import BRANDS, GOOGLE_API_KEY
 from evaluation import evaluate
 from logger import log_event
 from rag_chain import generate_answer
@@ -52,3 +52,6 @@ if q:
             st.caption(f"{sec}s | faithfulness: {m['faithfulness']} | context relevance: {m['context_relevance']}")
     log_event(brand=brand, model=model, query=q, response_time=sec, retrieved=[c["metadata"] for c in chunks], status=status, error=error)
     st.session_state.history.append({"role": "assistant", "content": answer, "sources": sources, "error": error})
+import streamlit as st
+
+st.write("API Key Loaded:", GOOGLE_API_KEY is not None)
