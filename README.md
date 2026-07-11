@@ -16,7 +16,7 @@ or in Streamlit Cloud secrets:
 ```toml
 GOOGLE_API_KEY = "your_key_here"
 HF_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 ```
 
 ## Add brochures
